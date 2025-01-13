@@ -187,23 +187,21 @@ For reliable results in production scraping environments, use proxies from top-t
 
 2. Reach the dashboard and click on the “Residential” zone in the table:
 
-![Bright Data's proxies and scraping infrastructure control panel](https://brightdata.com/wp-content/uploads/2025/01/image-7-1024x493.png)
+![Bright Data's proxies and scraping infrastructure control panel](https://github.com/luminati-io/Cloudscraper-with-proxies/blob/main/image-7.png)
 
 3. Activate the proxies by clicking the toggle:
 
-![Turning on the residential zone](https://brightdata.com/wp-content/uploads/2025/01/image-8-1024x137.png)
+![Turning on the residential zone](https://github.com/luminati-io/Cloudscraper-with-proxies/blob/main/image-8.png)
 
 This is what you should now be seeing:
 
-![The residential zone turned on](https://brightdata.com/wp-content/uploads/2025/01/image-9-1024x137.png)
-
+![The residential zone turned on](https://github.com/luminati-io/Cloudscraper-with-proxies/blob/main/image-9.png)
 > **Note**:\
 > Bright Data’s residential proxies rotate automatically.
 
 4. In the “Access Details” section, copy the proxy host, username, and password:
 
-![The access details for your residential proxies zone](https://brightdata.com/wp-content/uploads/2025/01/image-10.png)
-
+![The access details for your residential proxies zone](https://github.com/luminati-io/Cloudscraper-with-proxies/blob/main/image-10.png)
 Your Bright Data proxy URL will look like this:
 
 ```
@@ -242,4 +240,4 @@ Bright Data controls the best proxy servers in the world, serving Fortune 500 co
 *   [ISP proxies](https://brightdata.com/proxy-types/isp-proxies) – Over 700,000 ISP IPs.
 *   [Mobile proxies](https://brightdata.com/proxy-types/mobile-proxies) – Over 7M mobile IPs.
 
-[Create a free Bright Data account](https://brightdata.com/#popup-155639) today to try our proxy servers.
+[Create a free Bright Data account](https://brightdata.com) today to try our proxy servers.
