@@ -205,31 +205,102 @@ This is what you should now be seeing:
 Your Bright Data proxy URL will look like this:
 
 ```
-http://<PROXY_USERNAME>:<PROXY_PASSOWRD>@brd.superproxy.io:33335
+http://<PROXY_USERNAME>:<PROXY_PASSWORD>@brd.superproxy.io:33335
 ```
 
 5. Integrate the proxy into Cloudscraper as follows:
 
 ```python
 import cloudscraper
-
-# Create CloudScraper instance
+# Create a CloudScraper instance
 scraper = cloudscraper.create_scraper()
-
-# Define the Bright Data proxy
+# Define the premium proxy
 proxies = {
-   "http": "http://<PROXY_USERNAME>:<PROXY_PASSOWRD>@brd.superproxy.io:33335",
-   "https": "http://<PROXY_USERNAME>:<PROXY_PASSOWRD>@brd.superproxy.io:33335"
+"http": "http://<PROXY_USERNAME>:<PROXY_PASSWORD>@<PROXY_HOST>:<PROXY_PORT>",
+"https": "http://<PROXY_USERNAME>:<PROXY_PASSWORD>@<PROXY_HOST>:<PROXY_PORT>"
 }
-
-# Perform a request using the proxy
-response = scraper.get("https://httpbin.io/ip", proxies=proxies)
-
-# Print the repsonse
+# Perform a request using the premium proxy
+response = scraper.get("https://httpbin.org/ip", proxies=proxies)
+# Print the response to verify the proxy is working
 print(response.text)
 ```
 
-The CloudScraper proxy integration is done.
+The CloudScraper proxy integration is done. Now, we need to test and verify. To ensure the proxy is working correctly, you can test it against a service like [https://httpbin.org/ip](https://httpbin.org/ip), which returns the IP address of the caller. If the setup is correct, the response should display the IP address of the proxy server instead of your local IP.
+
+
+## Putting Everything Together 
+
+```python
+import cloudscraper
+import random
+import time
+
+# Step 1: Define a list of proxies (authenticated and non-authenticated)
+# Replace <PROXY_USERNAME>, <PROXY_PASSWORD>, <PROXY_HOST>, and <PROXY_PORT> with actual values
+proxy_list = [
+    {"http": "http://<PROXY_HOST_1>:<PROXY_PORT_1>", "https": "http://<PROXY_HOST_1>:<PROXY_PORT_1>"},
+    {"http": "http://<PROXY_USERNAME>:<PROXY_PASSWORD>@<PROXY_HOST_2>:<PROXY_PORT_2>", 
+     "https": "http://<PROXY_USERNAME>:<PROXY_PASSWORD>@<PROXY_HOST_2>:<PROXY_PORT_2>"},
+    {"http": "http://<PROXY_USERNAME>:<PROXY_PASSWORD>@<PROXY_HOST_3>:<PROXY_PORT_3>", 
+     "https": "http://<PROXY_USERNAME>:<PROXY_PASSWORD>@<PROXY_HOST_3>:<PROXY_PORT_3>"}
+]
+
+# Step 2: Create a CloudScraper instance
+scraper = cloudscraper.create_scraper()
+
+# Step 3: Define the target URL
+target_url = "https://httpbin.org/ip"  # This endpoint returns the caller's IP address
+
+# Step 4: Implement proxy rotation and make requests
+def fetch_with_proxy_rotation(proxy_list, target_url, num_requests=5):
+    """
+    Fetch the target URL using proxy rotation.
+    
+    Args:
+        proxy_list (list): A list of proxy configurations.
+        target_url (str): The URL to scrape.
+        num_requests (int): Number of requests to make.
+    """
+    for i in range(num_requests):
+        # Randomly select a proxy from the list
+        proxy = random.choice(proxy_list)
+        
+        try:
+            # Make a request using the selected proxy
+            print(f"Using proxy: {proxy}")
+            response = scraper.get(target_url, proxies=proxy, timeout=10)
+            
+            # Print the response (IP address of the proxy)
+            print(f"Response {i + 1}: {response.text}")
+        
+        except Exception as e:
+            # Handle errors (e.g., connection timeout, proxy failure)
+            print(f"Error with proxy {proxy}: {e}")
+        
+        # Wait a bit before the next request to mimic human behavior
+        time.sleep(random.uniform(1, 3))
+
+# Step 5: Run the function
+fetch_with_proxy_rotation(proxy_list, target_url, num_requests=5)
+```
+
+### Output Example
+
+```python
+Using proxy: {'http': 'http://<PROXY_HOST_1>:<PROXY_PORT_1>', 'https': 'http://<PROXY_HOST_1>:<PROXY_PORT_1>'}
+Response 1: {
+    "origin": "203.0.113.1"
+}
+Using proxy: {'http': 'http://<PROXY_USERNAME>:<PROXY_PASSWORD>@<PROXY_HOST_2>:<PROXY_PORT_2>', 'https': 'http://<PROXY_USERNAME>:<PROXY_PASSWORD>@<PROXY_HOST_2>:<PROXY_PORT_2>'}
+Response 2: {
+    "origin": "198.51.100.2"
+}
+Using proxy: {'http': 'http://<PROXY_USERNAME>:<PROXY_PASSWORD>@<PROXY_HOST_3>:<PROXY_PORT_3>', 'https': 'http://<PROXY_USERNAME>:<PROXY_PASSWORD>@<PROXY_HOST_3>:<PROXY_PORT_3>'}
+Response 3: {
+    "origin": "192.0.2.3"
+}
+...
+```
 
 ## Conclusion
 
